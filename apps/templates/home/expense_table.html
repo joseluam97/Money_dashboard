@@ -1,0 +1,575 @@
+{% block content %}
+<div>
+
+<div class="tab-content" id="pills-tabContent">
+  <!-- CABECERAS -->
+  <div class="row">
+    
+    <!-- TOTAL EXPENSES -->
+    <div class="col-xl-4 col-md-6">
+      <div class="card card-stats">
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <h5 class="card-title text-uppercase text-muted mb-0">
+                TOTAL EXPENSES
+              </h5>
+              <span class="h2 font-weight-bold mb-0">{{total_expense}} € </span>
+            </div>
+            <div class="col-auto">
+              <div
+                class="icon icon-shape bg-gradient-red text-white rounded-circle shadow"
+              >
+                <i class="ni ni-money-coins"></i>
+              </div>
+            </div>
+          </div>
+          <p class="mt-3 mb-0 text-sm">
+            <span class="text-success mr-2">
+              {% if diff_total_expense_last_month < 0 %}
+                <i class="fa fa-arrow-down"></i> {{diff_total_expense_last_month}}</span>
+              {% endif %}
+              
+              {% if diff_total_expense_last_month > 0 %}
+                <i class="fa fa-arrow-up"></i> {{diff_total_expense_last_month}}</span>
+              {% endif %}
+            <span class="text-nowrap">Since last month</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOTAL INCOMES -->
+    <div class="col-xl-4 col-md-6">
+      <div class="card card-stats">
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <h5 class="card-title text-uppercase text-muted mb-0">TOTAL INCOMES</h5>
+              <span class="h2 font-weight-bold mb-0">{{total_income}} € </span>
+            </div>
+            <div class="col-auto">
+              <div
+                class="icon icon-shape bg-gradient-blue text-white rounded-circle shadow"
+              >
+                <i class="ni ni-money-coins"></i>
+              </div>
+            </div>
+          </div>
+          <p class="mt-3 mb-0 text-sm">
+            <span class="text-success mr-2">
+              {% if diff_total_income_last_month < 0 %}
+                <i class="fa fa-arrow-down"></i> {{diff_total_income_last_month}}</span>
+              {% endif %}
+              
+              {% if diff_total_income_last_month > 0 %}
+                <i class="fa fa-arrow-up"></i> {{diff_total_income_last_month}}</span>
+              {% endif %}
+            <span class="text-nowrap">Since last month</span>
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- SAVING -->
+    <div class="col-xl-4 col-md-6">
+      <div class="card card-stats">
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <h5 class="card-title text-uppercase text-muted mb-0">SAVING</h5>
+              <span class="h2 font-weight-bold mb-0">{{monthly_balance}}</span>
+            </div>
+            <div class="col-auto">
+              <div
+                class="icon icon-shape bg-gradient-green text-white rounded-circle shadow"
+              >
+                <i class="ni ni-money-coins"></i>
+              </div>
+            </div>
+          </div>
+          <p class="mt-3 mb-0 text-sm">
+            <span class="text-success mr-2">
+
+              {% if monthly_balance_percentage > 20 %}
+                <i class="fa fa-arrow-up"></i> {{monthly_balance_percentage}} %</span>
+              {% endif %}
+              
+              {% if monthly_balance_percentage < 20 %}
+                <i class="fa fa-arrow-down"></i> {{monthly_balance_percentage}} %</span>
+              {% endif %}
+
+              {% if monthly_balance_percentage == 20 %}
+                {{monthly_balance_percentage}} %</span>
+              {% endif %}
+
+            <span class="text-nowrap">It should be around 20%</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- AMOUNT SPENT ON BASIC NEEDS -->
+    <div class="col-xl-3 col-md-6">
+      <div class="card card-stats">
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <h5 class="card-title text-uppercase text-muted mb-0">SPENT ON BASIC NEEDS</h5>
+              <span class="h2 font-weight-bold mb-0">{{total_expense_basic_needs}}</span>
+            </div>
+            <div class="col-auto">
+              <div
+                class="icon icon-shape bg-gradient-blue text-white rounded-circle shadow"
+              >
+                <i class="ni ni-chart-pie-35"></i>
+              </div>
+            </div>
+          </div>
+          <p class="mt-3 mb-0 text-sm">
+            <span class="text-success mr-2">
+
+              {% if total_expense_basic_needs_percentage > 50 %}
+                <i class="fa fa-arrow-up"></i> {{total_expense_basic_needs_percentage}} %</span>
+              {% endif %}
+              
+              {% if total_expense_basic_needs_percentage < 50 %}
+                <i class="fa fa-arrow-down"></i> {{total_expense_basic_needs_percentage}} %</span>
+              {% endif %}
+
+              {% if total_expense_basic_needs_percentage == 50 %}
+                {{total_expense_basic_needs_percentage}} %</span>
+              {% endif %}
+
+            <span class="text-nowrap">It should be around 50%</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- AMOUNT SPENT ON EXPENSIVE EXPENSES -->
+    <div class="col-xl-3 col-md-6">
+      <div class="card card-stats">
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <h5 class="card-title text-uppercase text-muted mb-0">SPENT ON EXPENSIVE EXPENSES</h5>
+              <span class="h2 font-weight-bold mb-0">{{total_expense_expendable_expenses}}</span>
+            </div>
+            <div class="col-auto">
+              <div
+                class="icon icon-shape bg-gradient-blue text-white rounded-circle shadow"
+              >
+                <i class="ni ni-chart-pie-35"></i>
+              </div>
+            </div>
+          </div>
+          <p class="mt-3 mb-0 text-sm">
+            <span class="text-success mr-2">
+
+              {% if total_expense_expendable_expenses_percentage > 30 %}
+                <i class="fa fa-arrow-up"></i> {{total_expense_expendable_expenses_percentage}} %</span>
+              {% endif %}
+              
+              {% if total_expense_expendable_expenses_percentage < 30 %}
+                <i class="fa fa-arrow-down"></i> {{total_expense_expendable_expenses_percentage}} %</span>
+              {% endif %}
+
+              {% if total_expense_expendable_expenses_percentage == 30 %}
+                {{total_expense_expendable_expenses_percentage}} %</span>
+              {% endif %}
+
+            <span class="text-nowrap">It should be around 30%</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- AMOUNT SPENT ON OTHERS -->
+    <div class="col-xl-3 col-md-6">
+      <div class="card card-stats">
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <h5 class="card-title text-uppercase text-muted mb-0">SPENT ON OTHERS</h5>
+              <span class="h2 font-weight-bold mb-0">{{total_expense_other}}</span>
+            </div>
+            <div class="col-auto">
+              <div
+                class="icon icon-shape bg-gradient-yellow text-white rounded-circle shadow"
+              >
+                <i class="ni ni-chart-pie-35"></i>
+              </div>
+            </div>
+          </div>
+          <p class="mt-3 mb-0 text-sm">
+            <span class="text-success mr-2">
+              {{total_expense_other_percentage}} %
+            </span>
+            <span class="text-nowrap">Its use should be limited</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- AMOUNT SPENT PENDING CATEGORIZATION -->
+    <div class="col-xl-3 col-md-6">
+      <div class="card card-stats">
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <h5 class="card-title text-uppercase text-muted mb-0">SPENT PENDING CATEGORIZATION</h5>
+              <span class="h2 font-weight-bold mb-0">{{total_expense_undetermined}}</span>
+            </div>
+            <div class="col-auto">
+              <div
+                class="icon icon-shape bg-gradient-red text-white rounded-circle shadow"
+              >
+                <i class="fa fa-window-close"></i>
+              </div>
+            </div>
+          </div>
+          <p class="mt-3 mb-0 text-sm">
+            <span class="text-success mr-2">
+              {{total_expense_undetermined_percentage}} %
+            </span>
+
+            <span class="text-nowrap">These expenses must be categorized</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- FIN CABECERAS -->
+
+  <!-- TABS -->
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a onclick="showTab('gastos')" class="nav-link" id="gastos-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+        Home
+      </a>
+    </li>
+    <li class="nav-item">
+      <a onclick="showTab('ingresos')" class="nav-link" id="ingresos-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+        Ingresos
+      </a>
+    </li>
+  </ul>
+  <!-- FIN TABS-->
+
+  <div class="tab-pane fade" id="gastos" role="tabpanel" aria-labelledby="pills-home-tab">
+    <!-- INICIO GASTOS -->
+    <div class="row">
+      <div class="col-xl-8">
+        <div class="card">
+          <div class="card-header border-0">
+            <div class="row align-items-center">
+              <div class="col">
+                <h3 class="mb-0">Expenses</h3>
+              </div>
+              <div class="col text-right">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-toggle="modal"
+                  data-target="#importModal"
+                >
+                  Import Data
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Id</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Account</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Amount</th>
+                  <th scope="col">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if not list_expenses %}
+                <tr>
+                  <th scope="row">
+                    No data has been recorded yet
+                  </th>
+                </tr>
+                {% endif %}
+                {% for expense in list_expenses %}
+                <tr>
+                  <th scope="row">
+                    {{expense.id}}
+                  </th>
+                  <td>
+                    {{expense.date}}
+                  </td>
+                  <td>
+                    {{expense.account.name}}
+                  </td>
+                  <td>
+                    {{expense.category.name}}
+                  </td>
+                  <td>
+                    {{expense.type}}
+                  </td>
+                  <td>
+                    {{expense.amount}} €
+                  </td>
+                  <td>
+                    {{expense.descripcion}}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-4">
+        <div class="card">
+          <div class="card-header border-0">
+            <div class="row align-items-center">
+              <div class="col">
+                <h3 class="mb-0">Expenses by category</h3>
+              </div>
+              <div class="col text-right">
+                <a href="#!" class="btn btn-sm btn-primary">See all</a>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Category</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Coincidences</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if not list_expenses_by_category %}
+                <tr>
+                  <th scope="row">
+                    No data has been recorded yet
+                  </th>
+                </tr>
+                {% endif %}
+                {% for category in list_expenses_by_category %}
+                <tr>
+                  <th scope="row">
+                    {{category.name}}
+                  </th>
+                  <td>
+                    {{category.total_amount_by_category}} €
+                  </td>
+                  <td>
+                    {{category.number_expenses}}
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <span class="mr-2">{{category.percentage_expenses}}%</span>
+                      <div>
+                        <div class="progress">
+                          <div
+                            class="progress-bar bg-gradient-danger"
+                            role="progressbar"
+                            aria-valuenow="60"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            style="width: 50%;"
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- FIN GASTOS -->
+  </div>
+  <div class="tab-pane fade" id="ingresos" role="tabpanel" aria-labelledby="pills-profile-tab">
+    <!-- INICIO INGRESOS -->
+    <div class="row">
+      <div class="col-xl-8">
+        <div class="card">
+          <div class="card-header border-0">
+            <div class="row align-items-center">
+              <div class="col">
+                <h3 class="mb-0">Incomes</h3>
+              </div>
+              <div class="col text-right">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-toggle="modal"
+                  data-target="#importModal"
+                >
+                  Import Data
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Id</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Account</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Amount</th>
+                  <th scope="col">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if not list_incomes %}
+                <tr>
+                  <th scope="row">
+                    No data has been recorded yet
+                  </th>
+                </tr>
+                {% endif %}
+                {% for income in list_incomes %}
+                <tr>
+                  <th scope="row">
+                    {{income.id}}
+                  </th>
+                  <td>
+                    {{income.date}}
+                  </td>
+                  <td>
+                    {{income.account.name}}
+                  </td>
+                  <td>
+                    {{income.category.name}}
+                  </td>
+                  <td>
+                    {{income.amount}} €
+                  </td>
+                  <td>
+                    {{income.descripcion}}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-4">
+        <div class="card">
+          <div class="card-header border-0">
+            <div class="row align-items-center">
+              <div class="col">
+                <h3 class="mb-0">Incomes by category</h3>
+              </div>
+              <div class="col text-right">
+                <a href="#!" class="btn btn-sm btn-primary">See all</a>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Category</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Coincidences</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if not list_incomes_by_category %}
+                <tr>
+                  <th scope="row">
+                    No data has been recorded yet
+                  </th>
+                </tr>
+                {% endif %}
+                {% for category in list_incomes_by_category %}
+                <tr>
+                  <th scope="row">
+                    {{category.name}}
+                  </th>
+                  <td>
+                    {{category.total_amount_by_category}} €
+                  </td>
+                  <td>
+                    {{category.number_incomes}}
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <span class="mr-2">{{category.percentage_incomes}}%</span>
+                      <div>
+                        <div class="progress">
+                          <div
+                            class="progress-bar bg-gradient-danger"
+                            role="progressbar"
+                            aria-valuenow="60"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            style="width: 50%;"
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- FIN INGRESOS -->
+  </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+  <script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
+  <script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
+
+  <!-- Exportado de excel -->
+  <script>
+    $(document).ready(function () {
+        showTab('gastos')
+    });
+  </script>
+
+  <script>
+  function showTab(tabId) {
+
+    document.getElementById("gastos").classList.remove('show', 'active')
+    document.getElementById("ingresos").classList.remove('show', 'active')
+    
+    document.getElementById("gastos-tab").classList.remove('active')
+    document.getElementById("ingresos-tab").classList.remove('active')
+
+    // Mostrar la pestaña seleccionada
+    document.getElementById(tabId).classList.add('show', 'active');
+
+    document.getElementById(tabId+"-tab").classList.add('active');
+  }
+  </script>
+
+{% endblock javascripts %}
+</div>

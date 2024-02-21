@@ -1,0 +1,180 @@
+{% extends 'layouts/base.html' %} {% block title %}Calendar{% endblock %} {%
+load static %} {% block extra_head %}
+<link
+  rel="stylesheet"
+  href="/apps/static/assets/css/calendar.css"
+  type="text/css"
+/>
+<script src="/apps/static/assets/js/components/calendar/calendar.js"></script>
+{% endblock %}
+
+<!-- Specific CSS goes HERE -->
+
+{% block content %}
+<div class="block-background"></div>
+
+<!--MODAL IMPORT GASTOS-->
+<div
+  class="modal fade"
+  id="importModal"
+  class="form-container"
+  data-backdrop="static"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="importModalLabel">New Event</h5>
+        <button
+          type="button"
+          class="exit"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'create-event' %}">
+          {% csrf_token %}
+          <div class="form-floating mb-3">
+            <label for="id_event_name">Event Name</label>
+            <input
+              type="text"
+              id="id_event_name"
+              name="name"
+              placeholder="Name"
+              class="form-control"
+            />
+          </div>
+          <div class="form-floating mb-3">
+            <label for="id_event_account">Event Account</label>
+            <input
+              type="text"
+              id="id_event_account"
+              name="amount"
+              placeholder="Amount"
+              class="form-control"
+              pattern="[0-9]+([\.][0-9]+)?"
+              title="Enter a valid number with optional decimals (e.g., 123 or 123.45)"
+            />
+          </div>
+          <div class="form-floating mb-3">
+            <label for="id_event_date">Event Date</label>
+            <input type="date" id="id_event_date" name="date" class="form-control">
+          </div>
+          <div class="form-floating mb-3">
+            <label for="id_event_notes">Event Notes</label>
+            <textarea
+              id="id_event_notes"
+              name="notes"
+              placeholder="Notes"
+              class="form-control"
+            ></textarea>
+          </div>
+          <div class="d-grid gap-2 col-6 mx-auto mb-3">
+            <button class="btn btn-primary" id="button" type="submit">
+              Save Event
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<div class="header bg-primary pb-0">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-lg-6 col-7">
+          <h6 class="h2 text-white d-inline-block mb-0">Events</h6>
+        </div>
+        <div class="col-lg-6 col-5 text-right">
+          <a href="#" class="btn btn-sm btn-neutral" id="add-event-template" data-toggle="modal" data-target="#importModal">
+            New Event
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Calendar html -->
+
+<div class="container-fluid mt-0">
+<div class="row">
+    
+  <!-- CALENDAR -->
+  <div class="col-xl-8 col-md-0">
+    <div class="calendar-container">
+      <div class="calendar">
+        <div class="month">
+          <i class="fas fa-caret-square-left prev"></i>
+          <div class="date"></div>
+          <i class="fas fa-caret-square-right next"></i>
+        </div>
+        <div class="weekdays">
+          <div>Mon</div>
+          <div>Tue</div>
+          <div>Wed</div>
+          <div>Thu</div>
+          <div>Fri</div>
+          <div>Sat</div>
+          <div>Sun</div>
+        </div>
+        <div class="days"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-4 col-md-0">
+    <div class="card-body">
+    <h6 class="heading-small text-muted mb-4">Event information</h6>
+    <div class="pl-lg-4">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="form-group">
+            <label class="form-control-label" for="input-username">User</label>
+            <input type="text" id="input-user" class="form-control" disabled>
+          </div>
+        </div>
+
+        <div class="col-lg-8">
+          <div class="form-group">
+            <label class="form-control-label" for="input-email">Title</label>
+            <input type="email" id="input-title" class="form-control" disabled>
+          </div>
+        </div>
+
+        <div class="col-lg-8">
+          <div class="form-group">
+            <label class="form-control-label" for="input-first-name">Amount</label>
+            <input type="text" id="input-amount" class="form-control" disabled>
+          </div>
+        </div>
+
+        <div class="col-lg-8">
+          <div class="form-group">
+            <label class="form-control-label" for="input-first-name">Date</label>
+            <input type="text" id="input-date" class="form-control" disabled>
+          </div>
+        </div>
+
+        <div class="col-lg-8">
+          <div class="form-group">
+            <label class="form-control-label" for="input-last-name">Notes</label>
+            <input type="text" id="input-notes" class="form-control" disabled>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+
+
+{% endblock content %}

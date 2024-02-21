@@ -1,0 +1,189 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Dashboard {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<div class="py-2">
+    <!-- Header -->
+    <div class="header bg-primary py-2">
+      <div class="container-fluid">
+        <div class="header-body">
+          <div class="row align-items-center justify-content-center py-0">
+            <div class="col-lg-4 col-7 text-center">
+              <div class="input-group" class="d-none d-md-inline-block ml-md-4">
+                  <a id="subtractMonth" class="input-group-text"><i class="fas fa-caret-square-left fa-lg" style="color: #000000;"></i></a>
+                  <input type="month" name="messeleccionado" id="messeleccionado" min="2022-01" max="2024-12" step="1" class="form-control">
+                  <a id="addMonth" class="input-group-text"><i class="fas fa-caret-square-right fa-lg" style="color: #000000;"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid mt--20 py-4">
+
+      <div id="datosGastosContainer"></div>
+
+      {% include "includes/footer.html" %}
+
+    </div>
+
+    <!--MODAL IMPORT GASTOS-->
+    <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="importModalLabel">Importar Datos desde Excel</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="post" enctype="multipart/form-data" action="{% url 'importar_datos' %}">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="excel_file">Seleccionar archivo Excel:</label>
+                <input type="file" class="form-control-file" id="excel_file" name="excel_file" accept=".xlsx, .xls">
+              </div>
+              <button type="submit" class="btn btn-primary" id="guardarDatosBtn" disabled>Guardar Datos</button>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+  <!-- Mostrado de alertas -->
+  {% if mensaje %}
+    <script>
+      $(document).ready(function () {
+        alert('{{ mensaje }}');
+      });
+    </script>
+  {% endif %}
+
+  <!-- Exportado de excel -->
+  <script>
+    $(document).ready(function () {
+        // Cuando cambia el valor del input de archivo
+        $('#excel_file').change(function () {
+            // Habilitar el botón si se ha seleccionado un archivo, de lo contrario, deshabilitar
+            $('#guardarDatosBtn').prop('disabled', !this.value);
+        });
+    });
+  </script>
+
+  <!-- Procesado del cambio de la seleccion de la fecha -->
+  <script>
+    $(document).ready(function () {
+      // Manejar el cambio de mes
+      $('#messeleccionado').change(function () {
+        // Obtener el nuevo valor del campo de mes
+        var nuevoMes = $(this).val();
+
+        // Realizar la solicitud AJAX para recargar los datos
+        $.ajax({
+          url: '{% url "recargar_datos" %}',  // Ajusta la URL según tu configuración
+          type: 'GET',
+          data: {mes: nuevoMes},
+          success: function (data) {
+              $('#datosGastosContainer').html(data);
+          },
+          error: function () {
+              console.error('Error al cargar los datos.');
+          }
+        });
+      });
+    });
+    </script>
+    
+    <!-- Procesado del cambio de la fecha mediante los botones -->
+    <script>
+      $('#subtractMonth').click(function (){
+        var string_date = $('#messeleccionado').val();
+
+        let fecha = new Date(string_date + '-01');  // Añadir '-01' para asegurar el primer día del mes
+
+        // Retroceder un mes
+        fecha.setMonth(fecha.getMonth() - 1);
+
+        // Ajustar el año si es enero
+        /*if (fecha.getMonth() === 11) {  // 11 corresponde a diciembre
+          fecha.setFullYear(fecha.getFullYear() - 1);
+        }*/
+
+        // Obtener la nueva fecha en el mismo formato
+        let nuevaCadenaFecha = fecha.toISOString().slice(0, 7);  // Formato YYYY-MM
+
+        // Establecer la fecha actual en el input
+        document.getElementById('messeleccionado').value = nuevaCadenaFecha;
+
+        // Disparar manualmente el evento change después de actualizar el valor
+        $('#messeleccionado').change();
+
+      });
+
+      $('#addMonth').click(function (){
+        var string_date = $('#messeleccionado').val();
+
+        let fecha = new Date(string_date + '-01');  // Añadir '-01' para asegurar el primer día del mes
+
+        // Retroceder un mes
+        fecha.setMonth(fecha.getMonth() + 1);
+
+        // Ajustar el año si es enero
+        /*if (fecha.getMonth() === 11) {  // 11 corresponde a diciembre
+          fecha.setFullYear(fecha.getFullYear() + 1);
+        }*/
+
+        // Obtener la nueva fecha en el mismo formato
+        let nuevaCadenaFecha = fecha.toISOString().slice(0, 7);  // Formato YYYY-MM
+
+        // Establecer la fecha actual en el input
+        document.getElementById('messeleccionado').value = nuevaCadenaFecha;
+        
+        // Disparar manualmente el evento change después de actualizar el valor
+        $('#messeleccionado').change();
+
+      });
+    </script>
+
+  <!-- Añadir al imput de fecha la fecha actual -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Obtener la fecha actual en formato YYYY-MM (mes actual)
+        var today = new Date();
+        var month = (today.getMonth() + 1).toString().padStart(2, '0'); // Sumar 1 porque los meses comienzan desde 0
+        var year = today.getFullYear();
+        var currentDate = year + '-' + month;
+
+        // Establecer la fecha actual en el input
+        document.getElementById('messeleccionado').value = currentDate;
+
+        $.ajax({
+          url: '{% url "recargar_datos" %}',  // Ajusta la URL según tu configuración
+          type: 'GET',
+          data: { mes: currentDate },
+          success: function (data) {
+              $('#datosGastosContainer').html(data);
+          },
+          error: function () {
+              console.error('Error al cargar los datos.');
+          }
+        });
+    });
+  </script>
+
+{% endblock javascripts %}
+
+</div>
